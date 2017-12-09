@@ -1,43 +1,71 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <meta charset="UTF-8">
+    <meta charset='UTF-8'>
     <title>nfl scores</title>
   </head>
+  <style>
+    ul {
+      list-style-type: none;
+      padding: 0;
+      line-height: 24px;
+    }
+
+    li {
+      padding: 0;
+    }
+  </style>
   <body>
     <?php
-      $url = "http://www.nfl.com/liveupdate/scorestrip/ss.xml";
-      $xmlfile = file_get_contents($url);
-      $object = simplexml_load_string($xmlfile);
+      $url = 'http://www.nfl.com/liveupdate/scorestrip/ss.xml';
+      $xml = simplexml_load_file($url);
 
-      $json = json_encode($object);
 
-      $jsonIterator = new RecursiveIteratorIterator(
-        new RecursiveArrayIterator(json_decode($json, TRUE)),
-        RecursiveIteratorIterator::SELF_FIRST);
+      function getGameDate($gameDateInput) {
+        $gameDateRaw = date_create_from_format('Ymd', substr($gameDateInput, 0, -2 ));
+        $gameDate = date_format($gameDateRaw, 'd.m.');
+        $output .= print($gameDate . ' ');
+      }
 
-      foreach ($jsonIterator as $key => $val) {
-        if(is_array($val)) {
-          //echo "<b>$key:</b><br />";
+      function getGameTime($gameTimeInput) {
+        $gameTime = date('h:i', strtotime($gameTimeInput));
+        $output .= print($gameTime . ' ');
+      }
+
+      function replaceTeamName($teamInput) {
+        if ($teamInput == 'vikings') {
+          $teamName = '<img src="img/vikings.png" style="width:18px; height:18px;"/>';
+          return $teamName;
         } else {
-          //echo "$key: $val<br />";
-          if ($key == "vnn") {
-            $awayTeam = $val;
-          } elseif ($key == "hnn") {
-            $homeTeam = $val;
-          } elseif ($key == "eid") {
-            $gamedateraw = date_create_from_format('Ymd', substr($val, 0, -2 ));
-            $gamedate = date_format($gamedateraw, 'd.m.Y');
-          } elseif ($key == "t") {
-            $gametime = date("h:i", strtotime($val));
-          } elseif ($key == "w") {
-            $currentWeek = $val;
-          }
+          $teamName = $teamInput;
+          return $teamName;
         }
       }
 
-      echo "<h1>Woche $currentWeek</h1>";
-      echo "$gamedate, $gametime $awayTeam @ $homeTeam";
+
+      $currentWeek = $xml->gms[0]['w'];
+      echo '<h1>Week ' . $currentWeek . '</h1>';
+      echo '<ul>';
+
+
+      foreach ($xml->gms->g as $game) {
+        echo '<li>';
+
+        getGameDate($game['eid']);
+        getGameTime($game['t']);
+        echo $output;
+
+        echo replaceTeamName($game['vnn']) . '@' . replaceTeamName($game['hnn']);
+
+        if ($game['q'] == 'P') {
+          echo ' Spiel noch nicht gestartet';
+        } else {
+          echo $game['vs'] . '-' . $game['hs'];
+        }
+        echo '</li>';
+      }
+
+      echo '</ul>';
 
 
     ?>
