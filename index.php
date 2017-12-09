@@ -24,12 +24,12 @@
       function getGameDate($gameDateInput) {
         $gameDateRaw = date_create_from_format('Ymd', substr($gameDateInput, 0, -2 ));
         $gameDate = date_format($gameDateRaw, 'd.m.');
-        $output .= print($gameDate . ' ');
+        echo $gameDate . ' ';
       }
 
       function getGameTime($gameTimeInput) {
         $gameTime = date('h:i', strtotime($gameTimeInput));
-        $output .= print($gameTime . ' ');
+        echo $gameTime . ' ';
       }
 
       function replaceTeamName($teamInput) {
@@ -47,13 +47,12 @@
         echo '<li>';
 
         getGameDate($game['eid']);
-        echo $output;
 
-        echo $game['h'] . " ";
+        echo $game['v'] . " ";
 
-        echo replaceTeamName($game['vnn']) . '@' . replaceTeamName($game['hnn']) . ' ';
+        echo replaceTeamName($game['vnn']) . ' @ ' . replaceTeamName($game['hnn']) . ' ';
 
-        echo $game['v'] . ' ';
+        echo $game['h'] . ' ';
 
         if ($game['q'] == 'P') {
           getGameTime($game['t']);
