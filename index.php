@@ -47,13 +47,16 @@
         echo '<li>';
 
         getGameDate($game['eid']);
-        getGameTime($game['t']);
         echo $output;
+
+        echo $game['h'] . " ";
 
         echo replaceTeamName($game['vnn']) . '@' . replaceTeamName($game['hnn']) . ' ';
 
+        echo $game['v'] . ' ';
+
         if ($game['q'] == 'P') {
-          echo ' Spiel noch nicht gestartet';
+          getGameTime($game['t']);
         } else {
           echo $game['vs'] . '-' . $game['hs'];
         }
