@@ -33,13 +33,8 @@
       }
 
       function replaceTeamName($teamInput) {
-        if ($teamInput == 'vikings') {
-          $teamName = '<img src="img/vikings.png" style="width:18px; height:18px;"/>';
-          return $teamName;
-        } else {
-          $teamName = $teamInput;
-          return $teamName;
-        }
+        $teamName = '<img src="img/' . $teamInput . '.png" style="width:18px; height:18px;"/>';
+        return $teamName;
       }
 
 
@@ -55,7 +50,7 @@
         getGameTime($game['t']);
         echo $output;
 
-        echo replaceTeamName($game['vnn']) . '@' . replaceTeamName($game['hnn']);
+        echo replaceTeamName($game['vnn']) . '@' . replaceTeamName($game['hnn']) . ' ';
 
         if ($game['q'] == 'P') {
           echo ' Spiel noch nicht gestartet';
