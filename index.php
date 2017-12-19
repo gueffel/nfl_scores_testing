@@ -48,17 +48,18 @@
 
         getGameDate($game['eid']);
 
-        echo $game['v'] . " ";
+        getGameTime($game['t']);
 
-        echo replaceTeamName($game['vnn']) . ' @ ' . replaceTeamName($game['hnn']) . ' ';
+        echo replaceTeamName($game['vnn']) . ' ';
 
-        echo $game['h'] . ' ';
+        echo $game['vs'] . ' ';
 
-        if ($game['q'] == 'P') {
-          getGameTime($game['t']);
-        } else {
-          echo $game['vs'] . '-' . $game['hs'];
-        }
+        echo '@ ';
+
+        echo $game['hs'] . ' ';
+
+        echo replaceTeamName($game['hnn']);
+
         echo '</li>';
       }
 
